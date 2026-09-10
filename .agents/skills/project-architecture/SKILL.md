@@ -71,3 +71,15 @@ API / Backend
 Database
    ↓
 External Services / AI
+```
+
+---
+
+### 4. Architecture Verification Checklist
+
+Before considering an architecture task complete:
+
+- [ ] Clear separation between frontend presentation and backend business logic.
+- [ ] No database credentials or secrets exposed to client-side code.
+- [ ] Technology decisions recorded in `docs/10-DECISIONS.md`.
+- [ ] High-level architecture and data flow updated in `docs/02-ARCHITECTURE.md`.

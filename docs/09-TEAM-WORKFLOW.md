@@ -41,25 +41,25 @@ Actual branch names may be assigned per member.
 
 ### Kamal
 
-Project lead / architecture / integration / final QA / deployment
+Team lead / architecture / integration / final QA / deployment
 
 ### Abishek
 
-TBD
+Frontend / UI Implementation (tentative)
 
 ### Manoj
 
-TBD
+Backend / API (tentative)
 
 ### Balasubramanian
 
-TBD
+Database / AI / Backend Support (tentative)
 
 ### Elango
 
-TBD
+Testing / Deployment / Integration Support (tentative)
 
-Roles will be finalized after the problem statement is received.
+> Note: Roles will be finalized immediately after the official problem statement is released.
 
 ## Integration Process
 
@@ -72,10 +72,35 @@ Commit
         ↓
 Push feature branch
         ↓
-Pull Request
+Pull Request / Coordinate
         ↓
-Review
+Review & Integration
         ↓
-Integration
-        ↓
-Testing
+Integration Testing on main
+```
+
+## Git Command Quick Reference
+
+### Starting Work on a Feature
+
+```bash
+git checkout main
+git pull origin main
+git checkout -b feature/<feature-name>
+```
+
+### Syncing with Latest Main
+
+```bash
+git checkout feature/<feature-name>
+git fetch origin
+git merge origin/main
+```
+
+### Submitting Completed Feature
+
+```bash
+git add .
+git commit -m "feat: concise description of change"
+git push origin feature/<feature-name>
+```

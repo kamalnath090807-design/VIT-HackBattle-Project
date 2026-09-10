@@ -9,20 +9,25 @@ TBD — Database selection and schema depend on the problem statement.
 TBD
 
 ## Tables / Collections
+<!-- Template: Define tables/collections once data model is agreed upon -->
 
-TBD
+| Entity / Collection | Field | Type | Constraints | Description |
+|---|---|---|---|---|
+| `users` (example) | `id` | `UUID / String` | Primary Key | Unique user identifier |
+| `users` (example) | `created_at` | `Timestamp` | Default: now() | Record creation timestamp |
 
 ## Relationships
 
-TBD
+<!-- Example: User (1) ─── (N) Tasks -->
+- `TBD`
 
 ## Authentication Data
 
-TBD
+- `TBD`
 
 ## Application Data
 
-TBD
+- `TBD`
 
 ## Required Indexes
 

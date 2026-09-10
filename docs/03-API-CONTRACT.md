@@ -19,32 +19,52 @@ TBD
 TBD
 
 ## Endpoints
+<!-- Template: Copy this block for each endpoint once problem statement is released -->
 
-### Endpoint 1
+### Endpoint 1: [Name / Action]
 
-Method:
+- **Method**: `GET | POST | PUT | DELETE` (TBD)
+- **Path**: `/api/v1/resource` (TBD)
+- **Purpose**: TBD
+- **Authentication**: `None | Required (Bearer token / Session)` (TBD)
 
-TBD
+#### Headers
 
-Path:
+```text
+Content-Type: application/json
+Authorization: Bearer <token> (if required)
+```
 
-TBD
+#### Request Parameters / Body
 
-Purpose:
+```json
+{
+  "example_field": "TBD"
+}
+```
 
-TBD
+#### Response (200 / 201)
 
-Request:
+```json
+{
+  "success": true,
+  "data": {
+    "example_field": "TBD"
+  }
+}
+```
 
-TBD
+#### Error Response (400 / 401 / 404 / 500)
 
-Response:
-
-TBD
-
-Errors:
-
-TBD
+```json
+{
+  "success": false,
+  "error": {
+    "code": "ERROR_CODE",
+    "message": "Human-readable error description"
+  }
+}
+```
 
 ---
 
@@ -58,12 +78,11 @@ TBD
 6. Validate inputs on the backend.
 7. Do not expose secrets through API responses.
 
-## Error Format
+## Standard Error Format
 
-TBD
+All error responses should follow a uniform structure:
 
-Example:
-
+```json
 {
   "success": false,
   "error": {
@@ -71,3 +90,4 @@ Example:
     "message": "Human-readable message"
   }
 }
+```

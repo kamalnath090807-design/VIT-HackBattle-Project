@@ -28,7 +28,7 @@ Priorities:
 Before creating or modifying UI:
 
 1. Read `AGENTS.md`.
-2. Read `docs/DESIGN_SYSTEM.md` if it exists.
+2. Read `docs/04-DESIGN-SYSTEM.md` if it exists.
 3. Inspect existing components.
 4. Inspect existing layouts and routes.
 5. Reuse existing components where appropriate.

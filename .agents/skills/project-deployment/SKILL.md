@@ -49,3 +49,16 @@ Backend API
 Database
   ↓
 External Services / AI
+```
+
+---
+
+# 3. Post-Deployment Verification
+
+After deploying:
+
+1. Visit the deployed production URL.
+2. Verify critical user paths end-to-end.
+3. Check browser console and server logs for uncaught errors.
+4. Verify all environment variables are correctly populated on the host.
+5. Record the working production URL in `docs/07-DEPLOYMENT.md`.

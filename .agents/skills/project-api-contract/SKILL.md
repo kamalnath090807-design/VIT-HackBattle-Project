@@ -26,8 +26,8 @@ The API contract is the shared agreement between components.
 Before creating or modifying an API:
 
 1. Read `AGENTS.md`.
-2. Read `docs/API_CONTRACT.md` if it exists.
-3. Read the relevant architecture documentation.
+2. Read `docs/03-API-CONTRACT.md`.
+3. Read the relevant architecture documentation in `docs/02-ARCHITECTURE.md`.
 4. Inspect the existing implementation.
 5. Identify all consumers of the API.
 
@@ -85,3 +85,4 @@ Error:
     "message": "Title is required"
   }
 }
+```

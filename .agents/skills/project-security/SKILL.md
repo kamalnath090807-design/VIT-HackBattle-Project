@@ -63,3 +63,15 @@ Private tokens
 Service-role credentials
 OAuth client secrets
 Private certificates
+```
+
+---
+
+# 3. Security Pre-Commit Checklist
+
+Before committing any changes:
+
+- [ ] Run `git diff --staged` to verify no credentials, keys, or tokens are included.
+- [ ] Ensure `.env` is listed in `.gitignore` and only `.env.example` with blank values is committed.
+- [ ] Confirm no debug endpoints or backdoor credentials are left enabled.
+- [ ] Verify that all external inputs (query params, request body, headers) are sanitized and validated.

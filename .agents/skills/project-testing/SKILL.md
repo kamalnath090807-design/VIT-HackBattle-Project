@@ -51,3 +51,15 @@ Prefer:
 User performs action
         ↓
 Expected behavior
+```
+
+---
+
+# 3. Hackathon Testing Workflow
+
+Focus testing effort where it matters most:
+
+1. **Happy Path (Primary Flow)**: Verify that the end-to-end user scenario works seamlessly without crashes.
+2. **Key Negative Cases**: Test empty inputs, invalid formats, unauthorized requests, and network timeouts.
+3. **Integration Points**: Verify that frontend correctly consumes backend responses and displays appropriate feedback.
+4. **Demo Readiness**: Run the exact demonstration script 3 times prior to judging to confirm repeatability.
