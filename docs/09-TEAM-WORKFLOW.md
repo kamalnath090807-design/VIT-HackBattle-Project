@@ -45,11 +45,11 @@ Team lead / architecture / integration / final QA / deployment
 
 ### Abishek
 
-Frontend / UI Implementation (tentative)
+Backend / API (tentative)
 
 ### Manoj
 
-Backend / API (tentative)
+Frontend / UI Implementation (tentative)
 
 ### Balasubramanian
 

@@ -19,8 +19,8 @@ Once the problem statement is released, the team will define the complete projec
 | Member | Responsibility |
 |---|---|
 | Kamal | Team Lead / Architecture / Integration |
-| Abishek | Frontend / UI Implementation |
-| Manoj | Backend / API |
+| Abishek | Backend / API |
+| Manoj | Frontend / UI Implementation |
 | Balasubramanian | Database / AI / Backend Support |
 | Elango | Testing / Deployment / Integration Support |
 
