@@ -1,16 +1,17 @@
-# VIT HackBattle Project — Agent Instructions
+# AURA — Agent Instructions
 
 ## 1. Project Context
 
-This repository is for a 36-hour software development hackathon.
+**Project**: AURA (Autonomous Unified Reasoning Agent)
+**Hackathon**: VIT HackBattle 2026 — 36-hour software development hackathon
+**Track**: AI & Automation
+**Primary Subtrack**: Agentic Workflows
 
-The problem statement, technology stack, and exact implementation requirements may change after the official problem statement is released.
-
-The agent must NOT assume a specific problem, architecture, database, framework, or feature before the team defines it.
+This is a bounded autonomous AI agent that plans, executes multi-step tasks using real tools, and verifies outcomes — while keeping humans informed and in control.
 
 ---
 
-# 2. Mandatory Rules
+## 2. Mandatory Rules
 
 Before making significant changes:
 
@@ -27,22 +28,50 @@ Before making significant changes:
 
 ---
 
-# 3. Project Documentation
+## 3. Source of Truth
+
+When making project decisions, use this priority:
+
+1. Official hackathon problem statement
+2. Agreed project documentation in `/docs`
+3. Project skills in `/.agents/skills/`
+4. Existing working implementation
+5. General engineering best practices
+
+Before making architectural, API, database, UI, security, testing, AI, or deployment changes:
+
+1. Read `AGENTS.md`.
+2. Read the relevant project skill.
+3. Read the relevant documentation.
+4. Inspect the current implementation.
+5. Check the API contract (`docs/03-API-CONTRACT.md`).
+6. Check the integration contract (`docs/11-INTEGRATION-CONTRACT.md`).
+7. Do not invent interfaces.
+8. Do not silently contradict documentation.
+9. If documentation and implementation conflict, identify the conflict.
+10. Approved architectural changes must update the relevant documentation.
+
+Do not override a project-specific decision merely because another approach is generally preferred.
+
+---
+
+## 4. Project Documentation
 
 The `/docs` directory contains the project's source of truth.
 
-Important documents:
-
-- `docs/01-PROJECT-OVERVIEW.md`
-- `docs/02-ARCHITECTURE.md`
-- `docs/03-API-CONTRACT.md`
-- `docs/04-DESIGN-SYSTEM.md`
-- `docs/05-DATABASE.md`
-- `docs/06-TESTING.md`
-- `docs/07-DEPLOYMENT.md`
-- `docs/08-SECURITY.md`
-- `docs/09-TEAM-WORKFLOW.md`
-- `docs/10-DECISIONS.md`
+| Document | Purpose |
+|----------|---------|
+| `docs/01-PROJECT-OVERVIEW.md` | Product specification, MVP, demo strategy |
+| `docs/02-ARCHITECTURE.md` | System architecture, component design |
+| `docs/03-API-CONTRACT.md` | API endpoints, schemas, error codes |
+| `docs/04-DESIGN-SYSTEM.md` | UI/UX specification, design tokens |
+| `docs/05-DATABASE.md` | Database schema, entities, access rules |
+| `docs/06-TESTING.md` | Testing strategy, test cases, acceptance criteria |
+| `docs/07-DEPLOYMENT.md` | Hosting, environment, deployment workflow |
+| `docs/08-SECURITY.md` | Threat model, permissions, secrets |
+| `docs/09-TEAM-WORKFLOW.md` | Team roles, schedule, git workflow |
+| `docs/10-DECISIONS.md` | Architecture decision records |
+| `docs/11-INTEGRATION-CONTRACT.md` | Module boundaries, shared contracts |
 
 When these documents contain project-specific decisions, follow them.
 
@@ -50,60 +79,24 @@ If implementation conflicts with the documentation, do not silently change the a
 
 ---
 
-# 4. Project Skills
+## 5. Project Skills
 
-Project-specific skills are stored under:
+Project-specific skills are stored under `.agents/skills/`:
 
-`.agents/skills/`
-
-Available skills:
-
-- `project-architecture`
-- `project-api-contract`
-- `project-deployment`
-- `project-design-system`
-- `project-security`
-- `project-testing`
-
-Use the relevant skill when performing work in that domain.
-
-Examples:
-
-- Architecture work → `project-architecture`
-- API work → `project-api-contract`
-- UI/UX work → `project-design-system`
-- Database/security-sensitive work → `project-security`
-- Testing/debugging → `project-testing`
-- Deployment → `project-deployment`
+- `project-architecture` — Architecture work
+- `project-api-contract` — API work
+- `project-design-system` — UI/UX work
+- `project-security` — Database/security-sensitive work
+- `project-testing` — Testing/debugging
+- `project-deployment` — Deployment
 
 Do not ignore these skills when they are relevant.
 
 ---
 
-# 5. Before Coding
+## 6. Architecture Rules
 
-Before implementing a feature:
-
-1. Identify the requirement.
-2. Check the relevant documentation.
-3. Inspect the existing code.
-4. Identify dependencies on other components.
-5. Determine the smallest practical implementation.
-6. Implement the feature.
-7. Test it.
-8. Update documentation if the implementation changes an agreed project decision.
-
-Do not immediately start coding based only on a vague request.
-
----
-
-# 6. Architecture Rules
-
-Follow the architecture defined in:
-
-`docs/02-ARCHITECTURE.md`
-
-General principles:
+Follow the architecture defined in `docs/02-ARCHITECTURE.md`.
 
 - Keep components modular.
 - Avoid unnecessary abstraction.
@@ -113,111 +106,83 @@ General principles:
 - Avoid duplicated logic.
 - Keep external integrations isolated.
 - Prefer maintainable code over clever code.
+- **LLM must not control security-critical decisions** without deterministic enforcement.
+- **All tool executions must go through the tool registry and policy engine**.
+- **Every agent action must produce an audit log entry**.
+- **AI provider access must be decoupled via the LLM provider adapter** (Groq primary, Gemini fallback) — never couple core reasoning directly to vendor SDKs.
 
 Do not introduce a new framework or major dependency without a clear reason.
 
 ---
 
-# 7. Frontend Rules
+## 7. Frontend Rules
 
-Follow:
-
-`docs/04-DESIGN-SYSTEM.md`
-
-Frontend implementation should:
+Follow `docs/04-DESIGN-SYSTEM.md`.
 
 - Use reusable components.
 - Follow the project's design system.
 - Maintain responsive layouts.
-- Include loading states.
-- Include error states.
-- Include empty states where appropriate.
+- Include loading, error, empty, and success states.
 - Maintain accessibility where practical.
 - Avoid unnecessary visual complexity.
-- Avoid inconsistent styling.
-
-Do not create multiple implementations of the same UI component without a reason.
+- Status indicators must match the canonical task states from the API contract.
+- **Never invent backend API responses** — use documented contract or mocks.
 
 ---
 
-# 8. Backend Rules
+## 8. Backend Rules
 
-Follow:
-
-`docs/02-ARCHITECTURE.md`
-
-and
-
-`docs/03-API-CONTRACT.md`
-
-Backend implementation should:
+Follow `docs/02-ARCHITECTURE.md` and `docs/03-API-CONTRACT.md`.
 
 - Validate inputs.
 - Handle errors explicitly.
 - Keep business logic organized.
 - Follow the defined API contract.
 - Avoid exposing secrets.
-- Return predictable responses.
+- Return predictable responses matching the documented schema.
 - Avoid unnecessary endpoints.
+- **Implement the exact documented API contract** — no ad-hoc endpoints.
 
-Any API contract change must be reflected in:
-
-`docs/03-API-CONTRACT.md`
+Any API contract change must be reflected in `docs/03-API-CONTRACT.md`.
 
 ---
 
-# 9. Database Rules
+## 9. Database Rules
 
-Follow:
+Follow `docs/05-DATABASE.md`.
 
-`docs/05-DATABASE.md`
-
-Database implementation should:
-
-- Use the database selected by the project.
+- Use the database selected by the project (Supabase/PostgreSQL).
 - Follow the documented schema.
 - Validate data.
 - Protect sensitive data.
 - Avoid unnecessary tables/collections.
 - Avoid exposing privileged credentials.
 - Document important schema changes.
+- Use parameterized queries — never concatenate user input.
 
 Never place database credentials directly in source code.
 
 ---
 
-# 10. Security Rules
+## 10. Security Rules
 
-Follow:
+Follow `docs/08-SECURITY.md`.
 
-`docs/08-SECURITY.md`
-
-Never commit:
-
-- API keys
-- Passwords
-- Access tokens
-- Database credentials
-- Private keys
-- Service-account credentials
-- `.env` files containing real secrets
+Never commit: API keys, passwords, access tokens, database credentials, private keys, service-account credentials, `.env` files containing real secrets.
 
 Use environment variables or the appropriate secret-management mechanism.
 
-Before deployment, verify that no secrets are exposed.
+The policy engine must be deterministic — the LLM must not be the sole authority on permission decisions.
 
 ---
 
-# 11. Testing Rules
+## 11. Testing Rules
 
-Follow:
-
-`docs/06-TESTING.md`
+Follow `docs/06-TESTING.md`.
 
 Every significant feature should be tested before integration.
 
 At minimum:
-
 1. Test the normal flow.
 2. Test important invalid inputs.
 3. Test failure conditions.
@@ -228,55 +193,35 @@ Do not claim a feature is complete if it has not been tested.
 
 ---
 
-# 12. Git Rules
+## 12. Git Rules
 
-Follow:
-
-`docs/09-TEAM-WORKFLOW.md`
-
-General rules:
+Follow `docs/09-TEAM-WORKFLOW.md`.
 
 - Pull the latest changes before beginning work.
 - Work on the appropriate branch.
 - Make focused commits.
-- Use meaningful commit messages.
+- Use meaningful commit messages: `feat:`, `fix:`, `refactor:`, `test:`, `docs:`, `style:`, `chore:`
 - Do not commit generated junk.
 - Do not commit secrets.
 - Do not force-push shared branches unless explicitly coordinated.
 - Do not overwrite another member's changes.
 - Test before pushing.
 
-Preferred commit style:
-
-`feat: add user authentication`
-
-`fix: resolve API validation error`
-
-`refactor: simplify dashboard components`
-
-`test: add API integration tests`
-
-`docs: update deployment instructions`
-
 ---
 
-# 13. Team Integration
+## 13. Team
 
-This is a shared five-person repository.
-
-Different members may work simultaneously on:
-
-- Frontend
-- Backend
-- AI
-- Database
-- Testing
-- Deployment
+| Member | Role |
+|--------|------|
+| Kamal | Architecture / Coordination / Integration |
+| Manoj | Frontend + UI/UX |
+| Abishek | Backend |
+| Bala Subramanian V | AI + Backend Support |
+| Elango | Testing / Deployment / Integration Support |
 
 Avoid unnecessary changes outside the assigned task.
 
 If a change affects another member's component:
-
 1. Inspect the dependency.
 2. Inform/coordinate with the affected component.
 3. Make the smallest required change.
@@ -284,45 +229,16 @@ If a change affects another member's component:
 
 ---
 
-# 14. Problem Statement Phase
+## 14. Hackathon Priority
 
-When the official problem statement is provided, do NOT immediately generate the entire application.
-
-First:
-
-1. Analyze the problem statement.
-2. Identify the actual user/problem.
-3. Extract functional requirements.
-4. Identify non-functional requirements.
-5. Identify core user flows.
-6. Define MVP features.
-7. Separate P0/P1/P2 features.
-8. Select the technology stack.
-9. Design the architecture.
-10. Define the database if required.
-11. Define the API contract if required.
-12. Define the UI/UX direction.
-13. Assign team responsibilities.
-14. Update the `/docs` files.
-15. Only then begin implementation.
-
-The team must agree on the blueprint before major parallel development begins.
-
----
-
-# 15. Hackathon Priority
-
-The primary objective is:
-
-WORKING PRODUCT > EXCESSIVE FEATURES
+The primary objective is: **WORKING PRODUCT > EXCESSIVE FEATURES**
 
 Prioritize:
-
 1. Core problem solved
 2. Reliable main user flow
-3. Functional backend/database when required
+3. Functional backend/database
 4. Good UI/UX
-5. AI functionality when required
+5. AI/agent functionality
 6. Testing
 7. Deployment
 8. Demo reliability
@@ -332,33 +248,15 @@ Do not sacrifice a working core product for unnecessary features.
 
 ---
 
-# 16. 36-Hour Constraint
+## 15. 36-Hour Constraint
 
-All technical decisions should consider the limited hackathon duration.
+Prefer: familiar technologies, free-tier services, managed services, simple architectures, fast deployment, minimal infrastructure, reliable libraries, small number of dependencies.
 
-Prefer:
-
-- Familiar technologies
-- Free-tier services
-- Managed services
-- Simple architectures
-- Fast deployment
-- Minimal infrastructure
-- Reliable libraries
-- Small number of dependencies
-
-Avoid unnecessary:
-
-- Microservices
-- Complex DevOps
-- Custom infrastructure
-- Premature optimization
-- Over-engineering
-- Large dependency chains
+Avoid unnecessary: microservices, complex DevOps, custom infrastructure, premature optimization, over-engineering, large dependency chains.
 
 ---
 
-# 17. Definition of Done
+## 16. Definition of Done
 
 A feature is considered complete only when:
 
@@ -374,26 +272,7 @@ A feature is considered complete only when:
 
 ---
 
-# 18. Agent Behavior
-
-When asked to modify the project:
-
-- Inspect before editing.
-- Reuse existing code where appropriate.
-- Follow project documentation.
-- Follow relevant project skills.
-- Avoid unnecessary rewrites.
-- Explain important architectural changes.
-- Identify risks before making destructive changes.
-- Verify the result after implementation.
-
-If requirements are unclear, use the existing project documentation and context first.
-
-Do not invent missing requirements.
-
----
-
-# 19. Final Integration
+## 17. Final Integration
 
 Before the final hackathon submission:
 
@@ -417,24 +296,8 @@ Before the final hackathon submission:
 
 ---
 
-# 20. Source of Truth
+## Current Project Status
 
-When making project decisions, use this priority:
+**POST-PROBLEM-STATEMENT — Architecture Phase**
 
-1. Official hackathon problem statement
-2. Agreed project documentation in `/docs`
-3. Project skills in `/.agents/skills/`
-4. Existing working implementation
-5. General engineering best practices
-
-Do not override a project-specific decision merely because another approach is generally preferred.
-
----
-
-# Current Project Status
-
-PRE-PROBLEM-STATEMENT
-
-The official problem statement has not yet been provided.
-
-Do not make project-specific assumptions until the problem statement is available.
+The official problem statement has been received and analyzed. Architecture and documentation are defined. Implementation is ready to begin after team approval.
