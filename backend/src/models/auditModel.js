@@ -9,6 +9,12 @@
  */
 
 const { getSupabase } = require('../config/supabase');
+const {
+  auditLogs,
+  uuidv4,
+  isTableMissingError,
+  warnMissingMigration,
+} = require('./storeFallback');
 
 const TABLE = 'audit_logs';
 
@@ -21,20 +27,40 @@ const TABLE = 'audit_logs';
  * @returns {Promise<Object>}
  */
 async function create(taskId, action, details = {}, stepIndex = null) {
-  const { data, error } = await getSupabase()
-    .from(TABLE)
-    .insert({
-      task_id: taskId,
-      action,
-      details,
-      step_index: stepIndex,
-      timestamp: new Date().toISOString(),
-    })
-    .select()
-    .single();
+  try {
+    const { data, error } = await getSupabase()
+      .from(TABLE)
+      .insert({
+        task_id: taskId,
+        action,
+        details,
+        step_index: stepIndex,
+        timestamp: new Date().toISOString(),
+      })
+      .select()
+      .single();
 
-  if (error) throw error;
-  return data;
+    if (error) throw error;
+    return data;
+  } catch (err) {
+    if (isTableMissingError(err)) {
+      warnMissingMigration(TABLE);
+      const entry = {
+        id: uuidv4(),
+        task_id: taskId,
+        action,
+        details,
+        step_index: stepIndex,
+        timestamp: new Date().toISOString(),
+      };
+      if (!auditLogs.has(taskId)) {
+        auditLogs.set(taskId, []);
+      }
+      auditLogs.get(taskId).push(entry);
+      return entry;
+    }
+    throw err;
+  }
 }
 
 /**
@@ -53,13 +79,29 @@ async function bulkCreate(entries) {
     timestamp: entry.timestamp || new Date().toISOString(),
   }));
 
-  const { data, error } = await getSupabase()
-    .from(TABLE)
-    .insert(rows)
-    .select();
+  try {
+    const { data, error } = await getSupabase()
+      .from(TABLE)
+      .insert(rows)
+      .select();
 
-  if (error) throw error;
-  return data;
+    if (error) throw error;
+    return data;
+  } catch (err) {
+    if (isTableMissingError(err)) {
+      warnMissingMigration(TABLE);
+      const inserted = rows.map((r) => {
+        const item = { id: uuidv4(), ...r };
+        if (!auditLogs.has(item.task_id)) {
+          auditLogs.set(item.task_id, []);
+        }
+        auditLogs.get(item.task_id).push(item);
+        return item;
+      });
+      return inserted;
+    }
+    throw err;
+  }
 }
 
 /**
@@ -68,14 +110,22 @@ async function bulkCreate(entries) {
  * @returns {Promise<Object[]>}
  */
 async function findByTaskId(taskId) {
-  const { data, error } = await getSupabase()
-    .from(TABLE)
-    .select('*')
-    .eq('task_id', taskId)
-    .order('timestamp', { ascending: true });
+  try {
+    const { data, error } = await getSupabase()
+      .from(TABLE)
+      .select('*')
+      .eq('task_id', taskId)
+      .order('timestamp', { ascending: true });
 
-  if (error) throw error;
-  return data || [];
+    if (error) throw error;
+    return data || [];
+  } catch (err) {
+    if (isTableMissingError(err)) {
+      const list = auditLogs.get(taskId) || [];
+      return [...list].sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp));
+    }
+    throw err;
+  }
 }
 
 // NOTE: No update() or delete() methods — audit logs are append-only per docs/05-DATABASE.md §3.5

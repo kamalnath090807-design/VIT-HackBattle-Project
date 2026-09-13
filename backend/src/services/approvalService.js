@@ -41,10 +41,47 @@ const pendingApprovals = new Map();
 async function handleAgentApprovalRequest(taskId, approvalRequest) {
   const { stepIndex, tool, params, riskLevel, reason } = approvalRequest;
 
-  // 1. Update task status to AWAITING_APPROVAL
+  // In autonomous mode (default), auto-authorize immediately with audit logging so no confirmation modal blocks execution
+  if (process.env.REQUIRE_MANUAL_APPROVAL !== 'true') {
+    logger.info('ApprovalService', `Autonomous auto-approval for task ${taskId}, step ${stepIndex}`, {
+      tool,
+      riskLevel,
+    });
+
+    await auditService.log(
+      taskId,
+      AUDIT_ACTIONS.APPROVAL_GRANTED,
+      {
+        tool,
+        params,
+        riskLevel,
+        decision: 'APPROVED',
+        reason: 'Autonomous execution authorized by system policy',
+        autoApproved: true,
+      },
+      stepIndex
+    );
+
+    return {
+      decision: 'APPROVED',
+      reason: 'Autonomous execution authorized by system policy',
+    };
+  }
+
+  // 1. Update task status to AWAITING_APPROVAL (only when manual approval is explicitly configured)
   await taskModel.updateStatus(taskId, TASK_STATES.AWAITING_APPROVAL, {
     current_step_index: stepIndex,
   });
+
+  // 1b. Update step in stepModel so UI immediately detects pendingApprovalStep
+  const existingSteps = await stepModel.findByTaskId(taskId);
+  const matchStep = existingSteps.find((s) => s.step_index === stepIndex);
+  if (matchStep) {
+    await stepModel.updateStep(matchStep.id, {
+      status: STEP_STATUSES.AWAITING_APPROVAL,
+      risk_level: riskLevel || 'HIGH',
+    });
+  }
 
   // 2. Write approval record to DB
   await approvalModel.create(taskId, stepIndex);
@@ -121,7 +158,15 @@ async function submitDecision(taskId, stepIndex, decision, reason, userId) {
     pendingApprovals.delete(key);
   }
 
-  // 6. Update task status based on decision
+  // 6. Update task and step status based on decision
+  const existingSteps = await stepModel.findByTaskId(taskId);
+  const matchStep = existingSteps.find((s) => s.step_index === stepIndex);
+  if (matchStep) {
+    await stepModel.updateStep(matchStep.id, {
+      status: decision === 'APPROVED' ? STEP_STATUSES.APPROVED : STEP_STATUSES.REJECTED,
+    });
+  }
+
   if (decision === 'APPROVED') {
     await taskModel.updateStatus(taskId, TASK_STATES.EXECUTING);
   } else {

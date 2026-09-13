@@ -42,7 +42,7 @@ async function createTask(userId, goal) {
     });
   });
 
-  return task;
+  return normalizeTask(task, []);
 }
 
 /**
@@ -65,7 +65,42 @@ async function runAgentExecution(taskId, userId, goal) {
       return approvalService.handleAgentApprovalRequest(taskId, approvalRequest);
     };
 
-    // Call agent orchestrator via the integration adapter
+    // Call agent orchestrator via the integration adapter with live progress callbacks
+    const callbacks = {
+      onPlanReady: async (planResult) => {
+        if (planResult?.steps?.length > 0) {
+          await taskModel.updatePlan(taskId, planResult);
+          await stepModel.bulkInsert(taskId, planResult.steps);
+          await taskModel.updateStatus(taskId, TASK_STATES.EXECUTING);
+        }
+      },
+      onStepStart: async (step) => {
+        await taskModel.updateStatus(taskId, TASK_STATES.EXECUTING, {
+          current_step_index: step.stepIndex,
+        });
+        const existing = await stepModel.findByTaskId(taskId);
+        const match = existing.find((s) => s.step_index === step.stepIndex);
+        if (match) {
+          await stepModel.updateStep(match.id, {
+            status: step.status,
+            started_at: step.startedAt || new Date().toISOString(),
+          });
+        }
+      },
+      onStepComplete: async (step) => {
+        const existing = await stepModel.findByTaskId(taskId);
+        const match = existing.find((s) => s.step_index === step.stepIndex);
+        if (match) {
+          await stepModel.updateStep(match.id, {
+            status: step.status,
+            result: step.result,
+            error_message: step.error,
+            completed_at: step.completedAt || new Date().toISOString(),
+          });
+        }
+      },
+    };
+
     const result = await agentAdapter.executeTask(
       {
         taskId,
@@ -74,7 +109,8 @@ async function runAgentExecution(taskId, userId, goal) {
         maxSteps: config.maxStepsPerTask,
         timeout: config.taskTimeoutMs,
       },
-      requestApprovalCallback
+      requestApprovalCallback,
+      callbacks
     );
 
     // Persist the agent's execution result
@@ -96,10 +132,23 @@ async function runAgentExecution(taskId, userId, goal) {
  * @param {Object} agentResult - ExecuteTaskResult from 11-INTEGRATION-CONTRACT §7.1
  */
 async function persistAgentResult(taskId, agentResult) {
-  // 1. Store plan steps
-  if (agentResult.plan?.steps?.length > 0) {
+  // 1. Store or update plan steps
+  const existingSteps = await stepModel.findByTaskId(taskId);
+  if (existingSteps.length === 0 && agentResult.plan?.steps?.length > 0) {
     await stepModel.bulkInsert(taskId, agentResult.plan.steps);
     await taskModel.updatePlan(taskId, agentResult.plan);
+  } else if (agentResult.plan?.steps?.length > 0) {
+    for (const step of agentResult.plan.steps) {
+      const match = existingSteps.find((s) => s.step_index === step.stepIndex);
+      if (match) {
+        await stepModel.updateStep(match.id, {
+          status: step.status,
+          result: step.result,
+          error_message: step.error,
+          completed_at: step.completedAt,
+        });
+      }
+    }
   }
 
   // 2. Bulk-write audit entries from agent
@@ -128,6 +177,67 @@ async function persistAgentResult(taskId, agentResult) {
 }
 
 /**
+ * Normalize step fields for canonical API contract compatibility.
+ * Provides both camelCase and snake_case properties.
+ */
+function normalizeStep(step) {
+  if (!step) return step;
+  const stepIndex = step.stepIndex !== undefined ? step.stepIndex : (step.step_index !== undefined ? step.step_index : 0);
+  const tool = step.tool || step.tool_name || 'unknown';
+  const riskLevel = step.riskLevel || step.risk_level || 'LOW';
+  const startedAt = step.startedAt || step.started_at || null;
+  const completedAt = step.completedAt || step.completed_at || null;
+  const error = step.error || step.error_message || null;
+
+  return {
+    ...step,
+    stepIndex,
+    step_index: stepIndex,
+    tool,
+    tool_name: tool,
+    riskLevel,
+    risk_level: riskLevel,
+    startedAt,
+    started_at: startedAt,
+    completedAt,
+    completed_at: completedAt,
+    error,
+    error_message: error,
+  };
+}
+
+/**
+ * Normalize task fields for canonical API contract compatibility.
+ * Provides both camelCase and snake_case properties.
+ */
+function normalizeTask(task, steps = []) {
+  if (!task) return null;
+  const createdAt = task.createdAt || task.created_at;
+  const updatedAt = task.updatedAt || task.updated_at;
+  const completedAt = task.completedAt || task.completed_at || null;
+  const currentStepIndex = task.currentStepIndex !== undefined ? task.currentStepIndex : (task.current_step_index !== undefined ? task.current_step_index : null);
+
+  const normalizedSteps = (steps || []).map(normalizeStep);
+
+  return {
+    ...task,
+    createdAt,
+    created_at: createdAt,
+    updatedAt,
+    updated_at: updatedAt,
+    completedAt,
+    completed_at: completedAt,
+    currentStepIndex,
+    current_step_index: currentStepIndex,
+    steps: normalizedSteps,
+    plan: task.plan ? {
+      ...task.plan,
+      steps: (task.plan.steps || normalizedSteps).map(normalizeStep),
+    } : (normalizedSteps.length > 0 ? { steps: normalizedSteps } : null),
+  };
+}
+
+/**
  * Get a single task with its steps.
  * @param {string} taskId
  * @param {string} userId
@@ -137,8 +247,11 @@ async function getTask(taskId, userId) {
   const task = await taskModel.findById(taskId, userId);
   if (!task) return null;
 
-  const steps = await stepModel.findByTaskId(taskId);
-  return { ...task, steps };
+  let steps = await stepModel.findByTaskId(taskId);
+  if ((!steps || steps.length === 0) && task.plan?.steps?.length > 0) {
+    steps = task.plan.steps;
+  }
+  return normalizeTask(task, steps);
 }
 
 /**
@@ -153,7 +266,7 @@ async function getTask(taskId, userId) {
 async function listTasks(userId, { status, limit = 20, offset = 0 } = {}) {
   const result = await taskModel.findByUserId(userId, { status, limit, offset });
   return {
-    tasks: result.tasks,
+    tasks: result.tasks.map((t) => normalizeTask(t, [])),
     total: result.total,
     limit,
     offset,
@@ -179,8 +292,8 @@ async function cancelTask(taskId, userId) {
 
   if (isTerminalState(task.status)) {
     const err = new Error(`Cannot cancel task in terminal state: ${task.status}`);
-    err.errorCode = 'VALIDATION_ERROR';
-    err.statusCode = 400;
+    err.errorCode = 'TASK_ALREADY_TERMINAL';
+    err.statusCode = 409;
     throw err;
   }
 
@@ -192,7 +305,8 @@ async function cancelTask(taskId, userId) {
     previousStatus: task.status,
   });
 
-  return updated;
+  const steps = await stepModel.findByTaskId(taskId);
+  return normalizeTask(updated, steps);
 }
 
 module.exports = {

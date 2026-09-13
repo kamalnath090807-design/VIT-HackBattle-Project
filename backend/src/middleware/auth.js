@@ -40,6 +40,15 @@ function authMiddleware(req, res, next) {
     );
   }
 
+  // Support demo / hackathon presentation token with valid UUID
+  if (token.startsWith('aura-demo-') || token === 'demo-token') {
+    req.user = {
+      userId: '550e8400-e29b-41d4-a716-446655440000',
+      email: 'judge@vithackbattle.org',
+    };
+    return next();
+  }
+
   // Create a Supabase client scoped to this user's token for auth validation
   const supabaseAuth = createClient(config.supabaseUrl, config.supabaseServiceRoleKey, {
     auth: { autoRefreshToken: false, persistSession: false },

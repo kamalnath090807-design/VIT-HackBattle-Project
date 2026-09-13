@@ -16,12 +16,9 @@
 
 const logger = require('../utils/logger');
 
-// ─── Import source: swap this to real agent module when available ───
-// Production (when agent/ is ready):
-//   const { executeTask: agentExecuteTask, getAvailableTools: agentGetTools } = require('../../../agent/src/orchestrator');
-// Temporary stub (for parallel development):
-const { executeTask: agentExecuteTask, getAvailableTools: agentGetTools } = require('./agentStub');
-// ─────────────────────────────────────────────────────────────────────
+// ─── Import source: Production Agent Module ───
+const { executeTask: agentExecuteTask, getAvailableTools: agentGetTools } = require('../../../agent/src/orchestrator');
+// ────────────────────────────────────────────────
 
 /**
  * Execute a task through the agent orchestrator.
@@ -33,9 +30,10 @@ const { executeTask: agentExecuteTask, getAvailableTools: agentGetTools } = requ
  * @param {number} [input.maxSteps=10]
  * @param {number} [input.timeout=300000]
  * @param {Function} requestApprovalCallback - Called by agent when HIGH-risk step needs approval
+ * @param {Object} [callbacks] - Streaming step callbacks (onPlanReady, onStepStart, onStepComplete)
  * @returns {Promise<Object>} ExecuteTaskResult per 11-INTEGRATION-CONTRACT §7.1
  */
-async function executeTask(input, requestApprovalCallback) {
+async function executeTask(input, requestApprovalCallback, callbacks = {}) {
   logger.info('AgentAdapter', `Initiating task execution: ${input.taskId}`, {
     goal: input.goal.substring(0, 100), // Truncate for logging
   });
@@ -47,7 +45,7 @@ async function executeTask(input, requestApprovalCallback) {
       userId: input.userId,
       maxSteps: input.maxSteps || 10,
       timeout: input.timeout || 300000,
-    }, requestApprovalCallback);
+    }, requestApprovalCallback, callbacks);
 
     logger.info('AgentAdapter', `Task execution completed: ${input.taskId}`, {
       status: result.status,

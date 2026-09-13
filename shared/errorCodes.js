@@ -2,7 +2,7 @@
  * AURA — Canonical Error Codes
  *
  * Source of truth: docs/03-API-CONTRACT.md §4
- * Integration contract: docs/11-INTEGRATION-CONTRACT.md §6
+ * Integration contract: docs/11-INTEGRATION-CONTRACT.md §6 
  *
  * ALL modules import from this file.
  * No module defines its own error code constants.

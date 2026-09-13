@@ -1,0 +1,411 @@
+{
+  "version": 5,
+  "user": {
+    "name": "Abishek",
+    "age": null,
+    "occupation": "Developer",
+    "location": null,
+    "favorites": {
+      "ide": "VS Code"
+    },
+    "preferences": {
+      "likes": [
+        "Node.js",
+        "AI",
+        "Automation"
+      ],
+      "dislikes": [],
+      "choices": []
+    },
+    "routine": {
+      "wakeTime": "07:00",
+      "sleepTime": "23:30",
+      "habits": [
+        {
+          "name": "Gym",
+          "time": "06:30",
+          "streak": 5,
+          "completedToday": false
+        },
+        {
+          "name": "Code Review",
+          "time": "10:00",
+          "streak": 12,
+          "completedToday": true
+        }
+      ],
+      "schedule": []
+    },
+    "social": {
+      "friends": [
+        "Kamal",
+        "Manoj",
+        "Bala",
+        "Elango"
+      ],
+      "family": []
+    },
+    "interests": {
+      "tech": [
+        "Node.js",
+        "AI",
+        "Android",
+        "PowerShell",
+        "Robotics"
+      ],
+      "nonTech": []
+    }
+  },
+  "facts": [
+    {
+      "key": "favorite_ide",
+      "fact": "User's favorite IDE is VS Code",
+      "timestamp": "2026-09-12T15:00:00.000Z"
+    },
+    {
+      "key": "mobile_phone",
+      "fact": "User's WhatsApp and phone number is +919042629740",
+      "timestamp": "2026-09-12T15:00:00.000Z"
+    },
+    {
+      "key": "email",
+      "fact": "User's primary email address is abi323728@gmail.com",
+      "timestamp": "2026-09-12T15:00:00.000Z"
+    },
+    {
+      "key": "expense_exp-1789230071430",
+      "fact": "Spent ₹450 on Hosting renewal",
+      "timestamp": "2026-09-12T16:21:11.430Z"
+    },
+    {
+      "key": "expense_exp-1789230410158",
+      "fact": "Spent ₹250 on lunch",
+      "timestamp": "2026-09-12T16:26:50.158Z"
+    },
+    {
+      "key": "expense_exp-1789231966466",
+      "fact": "Spent ₹450 on Hosting renewal",
+      "timestamp": "2026-09-12T16:52:46.466Z"
+    },
+    {
+      "key": "expense_exp-1789232145576",
+      "fact": "Spent ₹150 on Test coffee",
+      "timestamp": "2026-09-12T16:55:45.576Z"
+    },
+    {
+      "key": "expense_exp-1789232189900",
+      "fact": "Spent ₹150 on Test coffee",
+      "timestamp": "2026-09-12T16:56:29.900Z"
+    },
+    {
+      "key": "expense_exp-1789232234331",
+      "fact": "Spent ₹150 on Test coffee",
+      "timestamp": "2026-09-12T16:57:14.332Z"
+    },
+    {
+      "key": "expense_exp-1789232267056",
+      "fact": "Spent ₹450 on Hosting renewal",
+      "timestamp": "2026-09-12T16:57:47.057Z"
+    },
+    {
+      "key": "expense_exp-1789244605416",
+      "fact": "Spent ₹150 on Test coffee",
+      "timestamp": "2026-09-12T20:23:25.416Z"
+    },
+    {
+      "key": "expense_exp-1789244625180",
+      "fact": "Spent ₹450 on Hosting renewal",
+      "timestamp": "2026-09-12T20:23:45.180Z"
+    },
+    {
+      "key": "expense_exp-1789244759758",
+      "fact": "Spent ₹150 on Test coffee",
+      "timestamp": "2026-09-12T20:25:59.758Z"
+    },
+    {
+      "key": "expense_exp-1789244797578",
+      "fact": "Spent ₹150 on Test coffee",
+      "timestamp": "2026-09-12T20:26:37.578Z"
+    },
+    {
+      "key": "expense_exp-1789246069478",
+      "fact": "Spent ₹150 on Test coffee",
+      "timestamp": "2026-09-12T20:47:49.478Z"
+    },
+    {
+      "key": "expense_exp-1789246246080",
+      "fact": "Spent ₹150 on Test coffee",
+      "timestamp": "2026-09-12T20:50:46.080Z"
+    },
+    {
+      "key": "expense_exp-1789246276561",
+      "fact": "Spent ₹150 on Test coffee",
+      "timestamp": "2026-09-12T20:51:16.561Z"
+    },
+    {
+      "key": "expense_exp-1789246335180",
+      "fact": "Spent ₹150 on Test coffee",
+      "timestamp": "2026-09-12T20:52:15.180Z"
+    },
+    {
+      "key": "expense_exp-1789246942253",
+      "fact": "Spent ₹150 on Test coffee",
+      "timestamp": "2026-09-12T21:02:22.253Z"
+    },
+    {
+      "key": "expense_exp-1789246978558",
+      "fact": "Spent ₹450 on Hosting renewal",
+      "timestamp": "2026-09-12T21:02:58.559Z"
+    },
+    {
+      "key": "expense_exp-1789247554961",
+      "fact": "Spent ₹150 on Test coffee",
+      "timestamp": "2026-09-12T21:12:34.961Z"
+    },
+    {
+      "key": "expense_exp-1789247621469",
+      "fact": "Spent ₹450 on Hosting renewal",
+      "timestamp": "2026-09-12T21:13:41.469Z"
+    },
+    {
+      "key": "expense_exp-1789252405837",
+      "fact": "Spent ₹450 on Hosting renewal",
+      "timestamp": "2026-09-12T22:33:25.838Z"
+    },
+    {
+      "key": "expense_exp-1789254087094",
+      "fact": "Spent ₹150 on Test coffee",
+      "timestamp": "2026-09-12T23:01:27.094Z"
+    },
+    {
+      "key": "expense_exp-1789254116374",
+      "fact": "Spent ₹450 on Hosting renewal",
+      "timestamp": "2026-09-12T23:01:56.374Z"
+    },
+    {
+      "key": "expense_exp-1789254315288",
+      "fact": "Spent ₹150 on Test coffee",
+      "timestamp": "2026-09-12T23:05:15.288Z"
+    },
+    {
+      "key": "preferred_editor",
+      "fact": "VS Code with dark theme",
+      "timestamp": "2026-09-12T23:05:15.289Z"
+    },
+    {
+      "key": "expense_exp-1789254340642",
+      "fact": "Spent ₹450 on Hosting renewal",
+      "timestamp": "2026-09-12T23:05:40.642Z"
+    }
+  ],
+  "patterns": {
+    "frequentApps": {
+      "vscode": 18,
+      "chrome": 15,
+      "whatsapp": 9
+    },
+    "frequentTopics": {
+      "automation": 12,
+      "messaging": 8,
+      "system": 6
+    },
+    "sessionCount": 15,
+    "totalTurns": 378,
+    "lastSeen": "2026-09-12T23:05:40.642Z"
+  },
+  "expenses": [
+    {
+      "id": "exp-001",
+      "amount": 250,
+      "description": "Lunch at canteen",
+      "category": "food",
+      "timestamp": "2026-09-12T13:30:00.000Z"
+    },
+    {
+      "id": "exp-002",
+      "amount": 80,
+      "description": "Coffee & snacks",
+      "category": "food",
+      "timestamp": "2026-09-12T16:15:00.000Z"
+    },
+    {
+      "id": "exp-1789230071430",
+      "amount": 450,
+      "description": "Hosting renewal",
+      "category": "cloud",
+      "timestamp": "2026-09-12T16:21:11.430Z"
+    },
+    {
+      "id": "exp-1789230410158",
+      "amount": 250,
+      "description": "lunch",
+      "category": "food",
+      "timestamp": "2026-09-12T16:26:50.158Z"
+    },
+    {
+      "id": "exp-1789231966466",
+      "amount": 450,
+      "description": "Hosting renewal",
+      "category": "cloud",
+      "timestamp": "2026-09-12T16:52:46.466Z"
+    },
+    {
+      "id": "exp-1789232145576",
+      "amount": 150,
+      "description": "Test coffee",
+      "category": "food",
+      "timestamp": "2026-09-12T16:55:45.576Z"
+    },
+    {
+      "id": "exp-1789232189900",
+      "amount": 150,
+      "description": "Test coffee",
+      "category": "food",
+      "timestamp": "2026-09-12T16:56:29.900Z"
+    },
+    {
+      "id": "exp-1789232234331",
+      "amount": 150,
+      "description": "Test coffee",
+      "category": "food",
+      "timestamp": "2026-09-12T16:57:14.331Z"
+    },
+    {
+      "id": "exp-1789232267056",
+      "amount": 450,
+      "description": "Hosting renewal",
+      "category": "cloud",
+      "timestamp": "2026-09-12T16:57:47.056Z"
+    },
+    {
+      "id": "exp-1789244605416",
+      "amount": 150,
+      "description": "Test coffee",
+      "category": "food",
+      "timestamp": "2026-09-12T20:23:25.416Z"
+    },
+    {
+      "id": "exp-1789244625180",
+      "amount": 450,
+      "description": "Hosting renewal",
+      "category": "cloud",
+      "timestamp": "2026-09-12T20:23:45.180Z"
+    },
+    {
+      "id": "exp-1789244759758",
+      "amount": 150,
+      "description": "Test coffee",
+      "category": "food",
+      "timestamp": "2026-09-12T20:25:59.758Z"
+    },
+    {
+      "id": "exp-1789244797578",
+      "amount": 150,
+      "description": "Test coffee",
+      "category": "food",
+      "timestamp": "2026-09-12T20:26:37.578Z"
+    },
+    {
+      "id": "exp-1789246069478",
+      "amount": 150,
+      "description": "Test coffee",
+      "category": "food",
+      "timestamp": "2026-09-12T20:47:49.478Z"
+    },
+    {
+      "id": "exp-1789246246080",
+      "amount": 150,
+      "description": "Test coffee",
+      "category": "food",
+      "timestamp": "2026-09-12T20:50:46.080Z"
+    },
+    {
+      "id": "exp-1789246276561",
+      "amount": 150,
+      "description": "Test coffee",
+      "category": "food",
+      "timestamp": "2026-09-12T20:51:16.561Z"
+    },
+    {
+      "id": "exp-1789246335180",
+      "amount": 150,
+      "description": "Test coffee",
+      "category": "food",
+      "timestamp": "2026-09-12T20:52:15.180Z"
+    },
+    {
+      "id": "exp-1789246942253",
+      "amount": 150,
+      "description": "Test coffee",
+      "category": "food",
+      "timestamp": "2026-09-12T21:02:22.253Z"
+    },
+    {
+      "id": "exp-1789246978558",
+      "amount": 450,
+      "description": "Hosting renewal",
+      "category": "cloud",
+      "timestamp": "2026-09-12T21:02:58.558Z"
+    },
+    {
+      "id": "exp-1789247554961",
+      "amount": 150,
+      "description": "Test coffee",
+      "category": "food",
+      "timestamp": "2026-09-12T21:12:34.961Z"
+    },
+    {
+      "id": "exp-1789247621469",
+      "amount": 450,
+      "description": "Hosting renewal",
+      "category": "cloud",
+      "timestamp": "2026-09-12T21:13:41.469Z"
+    },
+    {
+      "id": "exp-1789252405837",
+      "amount": 450,
+      "description": "Hosting renewal",
+      "category": "cloud",
+      "timestamp": "2026-09-12T22:33:25.837Z"
+    },
+    {
+      "id": "exp-1789254087094",
+      "amount": 150,
+      "description": "Test coffee",
+      "category": "food",
+      "timestamp": "2026-09-12T23:01:27.094Z"
+    },
+    {
+      "id": "exp-1789254116374",
+      "amount": 450,
+      "description": "Hosting renewal",
+      "category": "cloud",
+      "timestamp": "2026-09-12T23:01:56.374Z"
+    },
+    {
+      "id": "exp-1789254315288",
+      "amount": 150,
+      "description": "Test coffee",
+      "category": "food",
+      "timestamp": "2026-09-12T23:05:15.288Z"
+    },
+    {
+      "id": "exp-1789254340642",
+      "amount": 450,
+      "description": "Hosting renewal",
+      "category": "cloud",
+      "timestamp": "2026-09-12T23:05:40.642Z"
+    }
+  ],
+  "notes": [
+    {
+      "id": "note-001",
+      "title": "HackBattle Demo Checklist",
+      "content": "Verify Groq fallback, test WhatsApp intent, show live system metrics",
+      "pinned": true,
+      "timestamp": "2026-09-12T14:00:00.000Z"
+    }
+  ],
+  "history": [],
+  "createdAt": "2026-09-12T12:00:00.000Z"
+}

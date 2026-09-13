@@ -1,0 +1,53 @@
+{
+  "version": 5,
+  "user": {
+    "name": "Abishek",
+    "age": null,
+    "occupation": "Developer",
+    "location": null,
+    "favorites": {},
+    "preferences": {
+      "likes": [],
+      "dislikes": [],
+      "choices": []
+    },
+    "routine": {
+      "wakeTime": "07:00",
+      "sleepTime": "23:30",
+      "habits": [],
+      "schedule": []
+    },
+    "social": {
+      "friends": [],
+      "family": []
+    },
+    "interests": {
+      "tech": [
+        "Node.js",
+        "AI",
+        "Android"
+      ],
+      "nonTech": []
+    }
+  },
+  "facts": [],
+  "patterns": {
+    "frequentApps": {},
+    "frequentTopics": {},
+    "sessionCount": 1,
+    "totalTurns": 0,
+    "lastSeen": "2026-09-12T23:05:13.631Z"
+  },
+  "expenses": [],
+  "notes": [
+    {
+      "id": "note-1789254313658",
+      "title": "Dev Task",
+      "content": "Review pull requests",
+      "pinned": true,
+      "timestamp": "2026-09-12T23:05:13.658Z"
+    }
+  ],
+  "history": [],
+  "createdAt": "2026-09-12T23:05:13.632Z"
+}

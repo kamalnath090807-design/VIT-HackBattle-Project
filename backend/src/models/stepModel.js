@@ -6,37 +6,56 @@
  */
 
 const { getSupabase } = require('../config/supabase');
+const {
+  steps,
+  uuidv4,
+  isTableMissingError,
+  warnMissingMigration,
+} = require('./storeFallback');
 
 const TABLE = 'task_steps';
 
 /**
  * Insert multiple steps for a task (after plan generation).
  * @param {string} taskId
- * @param {Array<Object>} steps - Array of step objects from the agent plan
+ * @param {Array<Object>} stepItems - Array of step objects from the agent plan
  * @returns {Promise<Object[]>}
  */
-async function bulkInsert(taskId, steps) {
-  const rows = steps.map((step) => ({
+async function bulkInsert(taskId, stepItems) {
+  const rows = stepItems.map((step) => ({
     task_id: taskId,
-    step_index: step.stepIndex,
-    description: step.description,
-    tool_name: step.tool,
-    params: step.params || {},
-    risk_level: step.riskLevel || 'LOW',
+    step_index: step.stepIndex !== undefined ? step.stepIndex : step.step_index,
+    description: step.description || step.reason || `Execute ${step.tool || step.tool_name}`,
+    tool_name: step.tool || step.tool_name,
+    params: step.params || step.parameters || {},
+    risk_level: step.riskLevel || step.risk_level || 'LOW',
     status: step.status || 'PENDING',
     result: step.result || null,
-    error_message: step.error || null,
+    error_message: step.error || step.error_message || null,
     started_at: step.startedAt || null,
     completed_at: step.completedAt || null,
   }));
 
-  const { data, error } = await getSupabase()
-    .from(TABLE)
-    .insert(rows)
-    .select();
+  try {
+    const { data, error } = await getSupabase()
+      .from(TABLE)
+      .insert(rows)
+      .select();
 
-  if (error) throw error;
-  return data;
+    if (error) throw error;
+    return data;
+  } catch (err) {
+    if (isTableMissingError(err)) {
+      warnMissingMigration(TABLE);
+      const inserted = rows.map((r) => {
+        const item = { id: uuidv4(), ...r };
+        steps.set(item.id, item);
+        return item;
+      });
+      return inserted;
+    }
+    throw err;
+  }
 }
 
 /**
@@ -45,14 +64,24 @@ async function bulkInsert(taskId, steps) {
  * @returns {Promise<Object[]>}
  */
 async function findByTaskId(taskId) {
-  const { data, error } = await getSupabase()
-    .from(TABLE)
-    .select('*')
-    .eq('task_id', taskId)
-    .order('step_index', { ascending: true });
+  try {
+    const { data, error } = await getSupabase()
+      .from(TABLE)
+      .select('*')
+      .eq('task_id', taskId)
+      .order('step_index', { ascending: true });
 
-  if (error) throw error;
-  return data || [];
+    if (error) throw error;
+    return data || [];
+  } catch (err) {
+    if (isTableMissingError(err)) {
+      const taskSteps = Array.from(steps.values())
+        .filter((s) => s.task_id === taskId)
+        .sort((a, b) => a.step_index - b.step_index);
+      return taskSteps;
+    }
+    throw err;
+  }
 }
 
 /**
@@ -62,15 +91,26 @@ async function findByTaskId(taskId) {
  * @returns {Promise<Object>}
  */
 async function updateStep(stepId, fields) {
-  const { data, error } = await getSupabase()
-    .from(TABLE)
-    .update(fields)
-    .eq('id', stepId)
-    .select()
-    .single();
+  try {
+    const { data, error } = await getSupabase()
+      .from(TABLE)
+      .update(fields)
+      .eq('id', stepId)
+      .select()
+      .single();
 
-  if (error) throw error;
-  return data;
+    if (error) throw error;
+    return data;
+  } catch (err) {
+    if (isTableMissingError(err)) {
+      const step = steps.get(stepId);
+      if (!step) return null;
+      Object.assign(step, fields);
+      steps.set(stepId, step);
+      return step;
+    }
+    throw err;
+  }
 }
 
 module.exports = {

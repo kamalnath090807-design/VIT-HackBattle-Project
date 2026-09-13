@@ -4,8 +4,11 @@
   "description": "AURA — Backend API Server (Express + Supabase)",
   "main": "src/server.js",
   "scripts": {
+    "prestart": "node scripts/cleanPort.js",
     "start": "node src/server.js",
+    "predev": "node scripts/cleanPort.js",
     "dev": "nodemon src/server.js",
+    "kill-port": "node scripts/cleanPort.js",
     "test": "jest --forceExit --detectOpenHandles",
     "test:unit": "jest tests/unit --forceExit",
     "test:api": "jest tests/api --forceExit --detectOpenHandles"

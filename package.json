@@ -1,0 +1,20 @@
+{
+  "name": "aura-desktop",
+  "version": "1.0.0",
+  "description": "AURA — Autonomous Unified Reasoning Agent (Floating HUD & Automation Engine)",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "hud": "electron .",
+    "backend": "npm start --prefix backend",
+    "frontend": "npm run dev --prefix frontend",
+    "test:agent": "npm test --prefix agent",
+    "test:backend": "npm test --prefix backend"
+  },
+  "dependencies": {
+    "uuid": "^10.0.0"
+  },
+  "devDependencies": {
+    "electron": "^29.4.6"
+  }
+}

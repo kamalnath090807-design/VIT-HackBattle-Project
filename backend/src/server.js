@@ -43,12 +43,16 @@ const authRoutes = require('./routes/auth');
 const taskRoutes = require('./routes/tasks');
 const auditRoutes = require('./routes/audit');
 const toolRoutes = require('./routes/tools');
+const contactRoutes = require('./routes/contacts');
+const automationRoutes = require('./routes/automation');
 
 app.use('/api/v1/health', healthRoutes);
 app.use('/api/v1/auth', authRoutes);
 app.use('/api/v1/tasks', taskRoutes);
 app.use('/api/v1/tasks', auditRoutes); // /tasks/:taskId/audit
 app.use('/api/v1/tools', toolRoutes);
+app.use('/api/v1/contacts', contactRoutes);
+app.use('/api/v1/automation', automationRoutes);
 
 // ─── 404 Handler ────────────────────────────────────────────────────
 
@@ -68,13 +72,35 @@ app.use(errorHandler);
 
 // ─── Server Start ───────────────────────────────────────────────────
 
-if (require.main === module) {
-  app.listen(config.port, () => {
-    logger.info('Server', `AURA backend running on port ${config.port}`, {
+function startServer(port, retries = 1) {
+  const server = app.listen(port, '0.0.0.0', () => {
+    logger.info('Server', `AURA backend running on port ${port} (0.0.0.0)`, {
       environment: config.nodeEnv,
       aiProvider: config.aiProvider,
     });
   });
+
+  server.on('error', (err) => {
+    if (err.code === 'EADDRINUSE' && retries > 0) {
+      logger.warn('Server', `Port ${port} in use. Automatically clearing stale process and retrying...`);
+      try {
+        const { execSync } = require('child_process');
+        execSync(
+          `powershell -NoProfile -Command "try { Get-NetTCPConnection -LocalPort ${port} -ErrorAction SilentlyContinue | ForEach-Object { Stop-Process -Id $_.OwningProcess -Force -ErrorAction SilentlyContinue } } catch {}"`
+        );
+      } catch (e) {}
+      setTimeout(() => startServer(port, retries - 1), 600);
+    } else {
+      logger.error('Server', `Server listen error: ${err.message}`, err);
+      process.exit(1);
+    }
+  });
+
+  return server;
+}
+
+if (require.main === module) {
+  startServer(config.port);
 }
 
 // Export for testing with supertest

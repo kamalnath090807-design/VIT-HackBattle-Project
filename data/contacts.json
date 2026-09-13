@@ -1,0 +1,38 @@
+[
+  {
+    "name": "Manoj L",
+    "phone": "+919944478049",
+    "email": "manoj@aura.team",
+    "aliases": ["manoj", "manoj kumar", "potta", "manoj potta"]
+  },
+  {
+    "name": "Elango",
+    "phone": "+918248136168",
+    "email": "elango@aura.team",
+    "aliases": ["elango", "elango skcet"]
+  },
+  {
+    "name": "Balasupramani",
+    "phone": "+919363898685",
+    "email": "bala@aura.team",
+    "aliases": ["bala", "balasubramani", "balasubramanian"]
+  },
+  {
+    "name": "Abishek",
+    "phone": "+919042629740",
+    "email": "abi323728@gmail.com",
+    "aliases": ["abi", "abhishek"]
+  },
+  {
+    "name": "Kamalesh",
+    "phone": "+918248042587",
+    "email": "kamal@aura.team",
+    "aliases": ["kamal", "kamalnath", "kamalesh", "kamalesh kamaraj"]
+  },
+  {
+    "name": "Appa",
+    "phone": "+917904819010",
+    "email": "appa@aura.team",
+    "aliases": ["appa", "father", "dad"]
+  }
+]

@@ -1,0 +1,46 @@
+{
+  "setup 1": {
+    "name": "Dev & Communication Setup",
+    "aliases": [
+      "setup 1",
+      "setup one",
+      "set up 1",
+      "set up one",
+      "first setup",
+      "open setup 1",
+      "open my setup 1",
+      "launch setup 1",
+      "start setup 1",
+      "dev setup"
+    ],
+    "apps": [
+      "chrome",
+      "whatsapp",
+      "vs code",
+      "file explorer"
+    ]
+  },
+  "setup 2": {
+    "name": "Work & AI Setup",
+    "aliases": [
+      "setup 2",
+      "setup two",
+      "set up 2",
+      "set up two",
+      "second setup",
+      "open setup 2",
+      "open my setup 2",
+      "launch setup 2",
+      "start setup 2",
+      "work setup",
+      "ai setup"
+    ],
+    "apps": [
+      "antigravity",
+      "file explorer",
+      "chatgpt",
+      "outlook",
+      "linkedin"
+    ]
+  }
+}
